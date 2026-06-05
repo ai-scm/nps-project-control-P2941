@@ -24,7 +24,7 @@ Tu tarea es generar un **informe ejecutivo semanal en formato HTML completo y au
 2. **Reporte de nómina** (.xlsx) — entregado por Alejandra
    → Columnas requeridas: Date, User, Timesheets - All hours, Hourly (COP), Total Hora
 
-3. **Archivo de horas extras / recargos** (.xlsx) — entregado por Alejandra
+3. **Archivo de horas extras / recargos** (.xlsx) — No tiene valor 0 entregado por Alejandra
    → Puede tener múltiples hojas (una por mes)
    → Solo se deben incluir conceptos de **RECARGO** (nocturno, festivo, nocturno festivo)
    → **NO incluir HORAS EXTRA** para no duplicar el valor de hora ya registrado en nómina
@@ -33,7 +33,7 @@ Tu tarea es generar un **informe ejecutivo semanal en formato HTML completo y au
 4. **Reporte de costos AWS** (.csv) — extraído directamente de la consola AWS
    → Tal como se descarga, sin modificar
 
-5. **Reporte de control de gastos del proyecto** (.xlsx)
+5. **Reporte de control de gastos del proyecto** (.xlsx) No tiene valor 0
    → Incluye licencias, hospedaje, alimentación, auditores externos, otros
 
 ---
@@ -254,19 +254,18 @@ La PMO lo usará para actualizar el dashboard sin leer el informe manualmente.
 ## 📝 INFORMACIÓN DEL PROYECTO (completar antes de enviar)
 
 ```
-Nombre del proyecto     : ___________________________________
-Código proyecto (PMO)   : ___________________________________ (ej. P0380)
-Código OA / ID interno  : ___________________________________
-Nombre corto (topbar)   : ___________________________________ (ej. ADRES AI Medical Audit)
-Semana del informe      : Sem ___ · ___ ___________ 2026
-Número de semana (NN)   : ___ (dos dígitos, ej. 04)
-Fecha del informe       : ___________________________________  (AAAAMMDD para nombre archivo)
-Mes actual del proyecto : M___ de M___ totales
-Tipo de proyecto        : [ ] Implementación Fixed
-                          [ ] Operación Retainer
-                          [ ] Mixto (Impl + Operación)
-Incluye servicios SaaS  : [ ] Sí  [ ] No
-Meses restantes         : ___________________________________
+Nombre del proyecto     : CO - Nueva EPS - Migracion ROSA
+Código proyecto (PMO)   : P0411
+Código OA / ID interno  : P2941
+Nombre corto (topbar)   : POC Nueva EPS - Migracion ROSA
+Semana del informe      : Sem 1 · 28 de mayo 2026
+Número de semana (NN)   : 01 (dos dígitos, ej. 04)
+Fecha del informe       : 20260602 (AAAAMMDD para nombre archivo)
+Mes actual del proyecto : M 1 de M 1 totales - acaba de emepezar
+Tipo de proyecto        : [X] Implementación Fixed
+                          
+Incluye servicios SaaS  :  [x] No
+Meses restantes         : 1
 TRM aplicada            : $4,000 COP/USD (fija — no modificar)
 ```
 
