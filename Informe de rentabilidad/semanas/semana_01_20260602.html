@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sem 01 · 28 May 2026 — CO - Nueva EPS - Migracion ROSA</title>
+  <style>
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      --color-text-primary:         #111827;
+      --color-text-secondary:       #4B5563;
+      --color-background-primary:   #ffffff;
+      --color-background-secondary: #f7f8fa;
+      --color-border-primary:       #d1d5db;
+      --color-border-tertiary:      #e5e7eb;
+      --border-radius-md:           6px;
+      --border-radius-lg:           8px;
+    }
+    .nav-bar {
+      background: #1F3864; padding: 10px 20px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-bar a { color: #9DC3E6; font-size: 12px; text-decoration: none;
+                 font-family: var(--font-sans); }
+    .nav-bar a:hover { color: #fff; }
+    .nav-bar .sep { color: #4B6A9B; font-size: 12px; }
+    .nav-bar .current { color: #fff; font-weight: 600; font-size: 12px;
+                        font-family: var(--font-sans); }
+    .informe-wrap { max-width: 960px; margin: 20px auto; padding: 0 20px 40px; }
+
+    /* ---- contenido ---- */
+    .informe-wrap * { box-sizing: border-box; }
+    .hdr { background:var(--color-background-primary); border:1px solid var(--color-border-tertiary);
+           border-radius:var(--border-radius-lg); padding:20px 22px; margin-bottom:16px; }
+    .hdr h1 { font-family:var(--font-sans); font-size:20px; color:var(--color-text-primary);
+              margin:0 0 4px; }
+    .hdr .sub { font-family:var(--font-sans); font-size:13px; color:var(--color-text-secondary);
+                margin:0 0 12px; }
+    .badges { display:flex; flex-wrap:wrap; gap:8px; }
+    .badge { font-family:var(--font-sans); font-size:11.5px; font-weight:600;
+             padding:4px 10px; border-radius:999px; }
+    .b-green { color:#3B9B5C; background:#EAF3DE; }
+    .b-amber { color:#EF9F27; background:#FAEEDA; }
+    .b-red   { color:#A32D2D; background:#FCEBEB; }
+    .b-blue  { color:#3572BA; background:rgba(53,114,186,0.2); }
+
+    section { background:var(--color-background-primary); border:1px solid var(--color-border-tertiary);
+              border-radius:var(--border-radius-lg); padding:18px 20px; margin-bottom:16px; }
+    section h2 { font-family:var(--font-sans); font-size:15px; color:var(--color-text-primary);
+                 margin:0 0 4px; display:flex; align-items:center; gap:8px; }
+    section .desc { font-family:var(--font-sans); font-size:12px; color:var(--color-text-secondary);
+                    margin:0 0 14px; }
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    @media(max-width:720px){ .g2,.g3,.g4{ grid-template-columns:1fr; } }
+
+    .kpi { border:1px solid var(--color-border-tertiary); border-radius:var(--border-radius-md);
+           padding:14px; background:var(--color-background-secondary); }
+    .kpi .label { font-family:var(--font-sans); font-size:11px; color:var(--color-text-secondary);
+                  text-transform:uppercase; letter-spacing:.04em; margin:0 0 6px; }
+    .kpi .val { font-family:var(--font-sans); font-size:22px; font-weight:700;
+                color:var(--color-text-primary); margin:0; }
+    .kpi .note { font-family:var(--font-sans); font-size:11px; color:var(--color-text-secondary);
+                 margin:4px 0 0; }
+
+    .chart-box { border:1px solid var(--color-border-tertiary); border-radius:var(--border-radius-md);
+                 padding:12px 12px 8px; background:var(--color-background-primary); }
+    .chart-box .ct { font-family:var(--font-sans); font-size:12px; font-weight:600;
+                     color:var(--color-text-primary); margin:0 0 8px; }
+    .canvas-main { height:130px; }
+    .canvas-sec  { height:110px; }
+
+    table.tbl { width:100%; border-collapse:collapse; font-family:var(--font-sans); font-size:12.5px; }
+    table.tbl th, table.tbl td { text-align:right; padding:8px 10px;
+                                 border-bottom:1px solid var(--color-border-tertiary); }
+    table.tbl th:first-child, table.tbl td:first-child { text-align:left; }
+    table.tbl thead th { color:var(--color-text-secondary); font-weight:600; font-size:11px;
+                         text-transform:uppercase; letter-spacing:.03em; }
+    table.tbl tfoot td { font-weight:700; color:var(--color-text-primary);
+                         border-top:2px solid var(--color-border-primary); border-bottom:none; }
+    .pos { color:#3B9B5C; font-weight:600; }
+    .neg { color:#A32D2D; font-weight:600; }
+
+    .alert-box { background:#FCEBEB; border:1px solid #f0c9c9; border-radius:var(--border-radius-md);
+                 padding:14px 18px; }
+    .alert-box h3 { font-family:var(--font-sans); font-size:13px; color:#A32D2D; margin:0 0 8px; }
+    .alert-box ul { margin:0; padding-left:18px; }
+    .alert-box li { font-family:var(--font-sans); font-size:12.5px; color:#7a2222;
+                    margin:5px 0; line-height:1.45; }
+    .action-box { background:#EAF3DE; border:1px solid #cfe3b8; border-radius:var(--border-radius-md);
+                  padding:14px 18px; margin-top:14px; }
+    .action-box h3 { font-family:var(--font-sans); font-size:13px; color:#2f7d4a; margin:0 0 8px; }
+    .action-box ul { margin:0; padding-left:18px; }
+    .action-box li { font-family:var(--font-sans); font-size:12.5px; color:#2d5a37;
+                     margin:5px 0; line-height:1.45; }
+    .assumption { font-family:var(--font-sans); font-size:11px; color:#8a6d1f;
+                  background:#FAEEDA; border-radius:4px; padding:8px 10px; margin-top:10px; }
+  </style>
+</head>
+<body style="background:#f0f4f8;margin:0;">
+
+<div class="nav-bar">
+  <a href="../../../index.html">← PMO Dashboard</a>
+  <span class="sep">/</span>
+  <a href="../index.html">P0411 · POC Nueva EPS - Migracion ROSA</a>
+  <span class="sep">/</span>
+  <span class="current">Sem 01 · 28 May 2026</span>
+</div>
+
+<div class="informe-wrap">
+
+  <!-- ENCABEZADO -->
+  <div class="hdr">
+    <h1>Informe Ejecutivo de Rentabilidad — Semana 01</h1>
+    <p class="sub">CO - Nueva EPS · Migración ROSA (PoC) · Mes 1 de 1 · Corte 28 may 2026 · TRM $4,000 COP/USD</p>
+    <div class="badges">
+      <span class="badge b-green">🟢 GM real 49% ≥ objetivo 43%</span>
+      <span class="badge b-green">🟢 Costo 3.7% del presupuesto</span>
+      <span class="badge b-amber">🟡 Cloud: margen CET 7% (línea delgada)</span>
+      <span class="badge b-blue">Proyecto recién iniciado (M1)</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 1 -->
+  <section>
+    <h2>1 · Resumen general</h2>
+    <p class="desc">Indicadores clave al corte. El proyecto acaba de iniciar (único mes del PoC), por lo que el costo real acumulado es bajo frente al presupuesto y el margen a la fecha se mide por avance de costo (POC).</p>
+    <div class="g4">
+      <div class="kpi">
+        <p class="label">Venta total CET</p>
+        <p class="val">$36.8M</p>
+        <p class="note">Sin IVA · Impl $29.0M + Cloud $7.8M</p>
+      </div>
+      <div class="kpi">
+        <p class="label">Costo total real</p>
+        <p class="val">$776,649</p>
+        <p class="note">3.7% del presupuesto ($20.9M)</p>
+      </div>
+      <div class="kpi">
+        <p class="label">Gross Margin real %</p>
+        <p class="val" style="color:#3B9B5C;">97.9.0%</p>
+        <p class="note">A la fecha (POC) · objetivo CET 43%</p>
+      </div>
+      <div class="kpi">
+        <p class="label">Horas acumuladas</p>
+        <p class="val">14.75</p>
+        <p class="note">de ~131 h presupuestadas (11.2%)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2 -->
+  <section>
+    <h2>2 · Costos reales vs presupuesto CET</h2>
+    <p class="desc">Comparación por línea entre el presupuesto del CET (hoja Total) y el costo real acumulado. Solo se muestran las líneas contratadas: Implementación Fase 1 y Cloud (SaaS y Otros Vendors están en cantidad 0 en el CET y se omiten).</p>
+    <div class="chart-box" style="margin-bottom:14px;">
+      <p class="ct">Presupuesto CET vs Real por línea (COP)</p>
+      <div class="canvas-main"><canvas id="chPresVsReal"></canvas></div>
+    </div>
+    <table class="tbl">
+      <thead>
+        <tr><th>Línea</th><th>Presupuesto CET</th><th>Real acumulado</th><th>Variación (COP)</th><th>% consumido</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Implementación Fase 1</td><td>$13,668,571</td><td>$658,437</td><td class="pos">−$13,010,134</td><td>4.8%</td></tr>
+        <tr><td>Cloud (AWS)</td><td>$7,263,151</td><td>$118,212</td><td class="pos">−$7,144,939</td><td>1.6%</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>Total</td><td>$20,931,723</td><td>$776,649</td><td class="pos">−$20,155,074</td><td>3.7%</td></tr>
+      </tfoot>
+    </table>
+    <p class="assumption">Variación negativa = costo por debajo del presupuesto (favorable). El bajo consumo es esperable al inicio del único mes del PoC.</p>
+  </section>
+
+  <!-- SECCIÓN 3 -->
+  <section>
+    <h2>3 · Personas (nómina + recargos + gastos)</h2>
+    <p class="desc">Horas reales vs presupuesto acumulado y composición del costo de Implementación Fase 1. El PoC se ejecuta en un solo mes (M1).</p>
+    <div class="g2">
+      <div class="chart-box">
+        <p class="ct">Horas acumuladas: real vs presupuesto</p>
+        <div class="canvas-main"><canvas id="chHoras"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <p class="ct">Composición costo Implementación Fase 1</p>
+        <div class="canvas-main"><canvas id="chDonutImpl"></canvas></div>
+      </div>
+    </div>
+    <p class="assumption">⚠️ Supuesto: no se adjuntaron el archivo de recargos ni el de control de gastos operativos → se asumen $0. El costo real de Implementación ($658,437) corresponde solo a nómina y podría incrementarse al confirmar estos insumos. Tarifa real promedio $29,264/h vs $104,394/h del CET (personal de menor tarifa → favorable al margen).</p>
+  </section>
+
+  <!-- SECCIÓN 4 -->
+  <section>
+    <h2>4 · Cloud AWS</h2>
+    <p class="desc">Consumo AWS real (descargado de consola, TRM $4,000) frente al techo presupuestado del CET ($7,263,151 COP). El consumo material (EC2, VPC) arrancó en mayo 2026.</p>
+    <div class="g2">
+      <div class="chart-box">
+        <p class="ct">Consumo AWS mensual real (COP)</p>
+        <div class="canvas-main"><canvas id="chAwsMes"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <p class="ct">AWS acumulado real vs techo CET (COP)</p>
+        <div class="canvas-main"><canvas id="chAwsAcum"></canvas></div>
+      </div>
+    </div>
+    <p class="assumption">Consumo total a la fecha: $29.55 USD = $118,212 COP (1.6% del techo). Consistente con el CET. El grueso del consumo (EC2 $48,579 COP + VPC $69,419 COP) se concentra en mayo.</p>
+  </section>
+
+  <!-- SECCIÓN 5 -->
+  <section>
+    <h2>5 · Gross Margin comparativo</h2>
+    <p class="desc">Margen objetivo del CET vs margen real a la fecha por línea, y margen generado en COP. El blended real (49%) supera al objetivo (43%) porque la línea de mayor margen (Implementación) lidera la ejecución.</p>
+    <div class="g2">
+      <div class="chart-box">
+        <p class="ct">GM % objetivo CET vs real a la fecha</p>
+        <div class="canvas-main"><canvas id="chGmPct"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <p class="ct">GM en COP real acumulado por línea</p>
+        <div class="canvas-main"><canvas id="chGmCop"></canvas></div>
+      </div>
+    </div>
+    <p class="assumption">El margen de Cloud es estructuralmente delgado (7% CET = $548,849 COP sobre $7.8M). A la fecha genera apenas $8,933 COP de margen: cualquier sobreconsumo AWS sobre $1,816 USD lo lleva a pérdida.</p>
+  </section>
+
+  <!-- SECCIÓN 6 -->
+  <section>
+    <h2>6 · Revenue Realization</h2>
+    <p class="desc">Estimación del revenue reconocido por avance de costo (POC) frente al revenue contratado total pendiente de facturar.</p>
+    <div class="g2">
+      <div class="chart-box">
+        <p class="ct">Revenue reconocido vs pendiente</p>
+        <div class="canvas-main"><canvas id="chRevenue"></canvas></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="kpi">
+          <p class="label">Revenue pendiente</p>
+          <p class="val">$35.2M</p>
+          <p class="note">95.9% del contrato ($36.8M) por reconocer</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Riesgo cloud en operación</p>
+          <p class="val" style="color:#3B9B5C;">Bajo</p>
+          <p class="note">Operación NO contratada (Cloud Op. $0 en CET). Riesgo acotado a Implementación: techo $7.26M, consumido 1.6%.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 7 -->
+  <section>
+    <h2>7 · Alertas y acciones (PM)</h2>
+    <div class="alert-box">
+      <h3>🚨 Alertas críticas (impacto en COP)</h3>
+      <ul>
+        <li><strong>Margen Cloud razor-thin:</strong> el CET deja solo 7% ($548,849 COP) sobre la línea Cloud. El consumo material de AWS (EC2/VPC) inició en mayo; cualquier sobreconsumo por encima de $1,816 USD ($7.26M COP) lleva la línea a pérdida directa.</li>
+        <li><strong>Costo de Implementación posiblemente subestimado:</strong> faltan el archivo de recargos y el de gastos operativos. El costo real ($658,437) cubre solo nómina; al cierre del mes podría aumentar y comprimir el margen del 53%.</li>
+      </ul>
+    </div>
+    <div class="action-box">
+      <h3>✅ Acciones para el PM</h3>
+      <ul>
+        <li>Configurar <strong>alerta de billing AWS</strong> al 50% del techo ($3.6M COP) y revisar el consumo semanalmente; el margen Cloud (7%) no tolera sobrecostos.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  const C = {
+    green:'#3B9B5C', greenBg:'#EAF3DE',
+    amber:'#EF9F27', amberBg:'#FAEEDA',
+    red:'#A32D2D',   redBg:'#FCEBEB',
+    blue:'#3572BA',  blueBg:'rgba(53,114,186,0.2)',
+    gray:'#9CA3AF'
+  };
+  const FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif";
+  Chart.defaults.font.family = FONT;
+  Chart.defaults.font.size = 10.5;
+  Chart.defaults.color = '#4B5563';
+
+  const copM = v => '$' + (v/1e6).toFixed(v>=1e7?1:2) + 'M';
+  const cop  = v => '$' + Math.round(v).toLocaleString('en-US');
+
+  // 2 · Presupuesto vs Real
+  new Chart(document.getElementById('chPresVsReal'), {
+    type:'bar',
+    data:{ labels:['Implementación','Cloud (AWS)'],
+      datasets:[
+        { label:'Presupuesto CET', data:[13668571,7263151], backgroundColor:C.blueBg, borderColor:C.blue, borderWidth:1 },
+        { label:'Real acumulado',  data:[658437,118212],     backgroundColor:C.green,  borderColor:C.green, borderWidth:1 }
+      ]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{position:'bottom'},
+      tooltip:{ callbacks:{ label:c=>c.dataset.label+': '+cop(c.raw) } } },
+      scales:{ y:{ ticks:{ callback:v=>copM(v) }, beginAtZero:true } } }
+  });
+
+  // 3 · Horas acumuladas (M1 único)
+  new Chart(document.getElementById('chHoras'), {
+    type:'line',
+    data:{ labels:['Inicio M1','Corte 28 May','Fin M1 (plan)'],
+      datasets:[
+        { label:'Horas reales', data:[0,22.5,null], borderColor:C.green, backgroundColor:C.greenBg, tension:.25, spanGaps:true, pointRadius:4 },
+        { label:'Presupuesto (plan)', data:[0,null,131], borderColor:C.blue, borderDash:[5,4], backgroundColor:'transparent', tension:0, spanGaps:true, pointRadius:4 }
+      ]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{position:'bottom'} },
+      scales:{ y:{ beginAtZero:true, title:{display:true,text:'Horas'} } } }
+  });
+
+  // 3 · Donut composición Implementación
+  new Chart(document.getElementById('chDonutImpl'), {
+    type:'doughnut',
+    data:{ labels:['Nómina','Recargos (s/ archivo)','Gastos op. (s/ archivo)'],
+      datasets:[{ data:[658437,0,0], backgroundColor:[C.green,C.amber,C.blue], borderWidth:1, borderColor:'#fff' }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{position:'right'},
+      tooltip:{ callbacks:{ label:c=>c.label+': '+cop(c.raw) } } } }
+  });
+
+  // 4 · AWS mensual (degradado azul→naranja→rojo según pico)
+  const awsMes=[1.38,4.73,4.50,118201.31];
+  const awsMax=Math.max(...awsMes);
+  const awsColors=awsMes.map(v=>{ const r=v/awsMax; return r>0.66?C.red : r>0.33?C.amber : C.blue; });
+  new Chart(document.getElementById('chAwsMes'), {
+    type:'bar',
+    data:{ labels:['Feb','Mar','Abr','May'],
+      datasets:[{ label:'AWS real (COP)', data:awsMes, backgroundColor:awsColors, borderWidth:0 }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false},
+      tooltip:{ callbacks:{ label:c=>cop(c.raw) } } },
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=> v>=1000? copM(v): cop(v) } } } }
+  });
+
+  // 4 · AWS acumulado vs techo CET
+  new Chart(document.getElementById('chAwsAcum'), {
+    type:'line',
+    data:{ labels:['Feb','Mar','Abr','May'],
+      datasets:[
+        { label:'AWS acumulado real', data:[1.38,6.11,10.61,118211.92], borderColor:C.blue, backgroundColor:C.blueBg, fill:true, tension:.25, pointRadius:3 },
+        { label:'Techo CET Cloud', data:[7263151,7263151,7263151,7263151], borderColor:C.red, borderDash:[6,4], backgroundColor:'transparent', pointRadius:0 }
+      ]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{position:'bottom'},
+      tooltip:{ callbacks:{ label:c=>c.dataset.label+': '+cop(c.raw) } } },
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>copM(v) } } } }
+  });
+
+  // 5 · GM % objetivo vs real
+  new Chart(document.getElementById('chGmPct'), {
+    type:'bar',
+    data:{ labels:['Implementación','Cloud','Total'],
+      datasets:[
+        { label:'GM % objetivo CET', data:[52.8,7.0,43.1], backgroundColor:C.blueBg, borderColor:C.blue, borderWidth:1 },
+        { label:'GM % real a la fecha', data:[52.8,7.0,49.0], backgroundColor:C.green, borderColor:C.green, borderWidth:1 }
+      ]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{position:'bottom'},
+      tooltip:{ callbacks:{ label:c=>c.dataset.label+': '+c.raw+'%' } } },
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>v+'%' } } } }
+  });
+
+  // 5 · GM en COP por línea (real acumulado)
+  new Chart(document.getElementById('chGmCop'), {
+    type:'bar',
+    data:{ labels:['Implementación','Cloud'],
+      datasets:[{ label:'GM COP real acumulado', data:[736420,8933],
+        backgroundColor:[C.green,C.amber], borderWidth:0 }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false},
+      tooltip:{ callbacks:{ label:c=>cop(c.raw) } } },
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=> v>=1000? copM(v): cop(v) } } } }
+  });
+
+  // 6 · Revenue Realization
+  new Chart(document.getElementById('chRevenue'), {
+    type:'doughnut',
+    data:{ labels:['Reconocido (POC)','Pendiente'],
+      datasets:[{ data:[1522002,35245998], backgroundColor:[C.green,C.gray], borderWidth:1, borderColor:'#fff' }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{position:'bottom'},
+      tooltip:{ callbacks:{ label:c=>c.label+': '+cop(c.raw) } } } }
+  });
+</script>
+
+<!--
+╔══════════════════════════════════════════════════════════╗
+║  DATOS PARA EL DASHBOARD — copiar en index.html y JSON  ║
+╚══════════════════════════════════════════════════════════╝
+
+▸ Para proyectos/P0411/index.html → array SEMANAS[]
+  Agrega este objeto al final del array:
+
+  {
+    semana:  "Sem 01 · 28 May 2026",
+    fecha:   "2026-05-28",
+    archivo: "semanas/semana_01_20260602.html",
+    gm:      49.0,
+    costo:   0.78,
+    cloud:   0.12,
+    horas:   22.5,
+    implGM:  52.8,
+    cloudGM: 7.0,
+    saasGM:  null,
+    ovGM:    null,
+    estado:  "ok",
+  },
+
+▸ Para _data/proyectos.json → semanas[] del proyecto:
+
+  { "semana": "Sem 01 · 28 May 2026", "fecha": "2026-05-28",
+    "archivo": "semanas/semana_01_20260602.html",
+    "gm": 49.0, "costo": 0.78,
+    "cloud": 0.12, "horas": 22.5,
+    "estado": "ok" }
+
+  Criterio de estado:
+  - "ok" → GM ≥ objetivo CET  (49.0% ≥ 43.1%)  ✓
+  - "wn" → GM entre objetivo −3pp y objetivo
+  - "er" → GM < objetivo −3pp
+-->
+
+</body>
+</html>
